@@ -3,7 +3,7 @@ const redis = require('redis');
 
 // setup Redis:
 // const redisClient = redis.createClient();
-const client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 
 const handleRegisterPromise = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body;
