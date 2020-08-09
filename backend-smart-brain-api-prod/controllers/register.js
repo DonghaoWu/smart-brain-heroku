@@ -52,6 +52,7 @@ const setToken = (token, id) => {
 const createSession = (user) => {
   const { email, id } = user;
   const token = signToken(email);
+  console.log(token);
   return setToken(token, id)
     .then(() => {
       console.log('ready to send session1')
