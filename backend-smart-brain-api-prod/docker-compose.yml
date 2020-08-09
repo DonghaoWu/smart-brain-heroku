@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+
+  # Backend API
+  smart-brain-api:
+    container_name: backend-docker-prod
+    build: ./
+    command: npm start
+    working_dir: /usr/src/smart-brain-api-docker
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sally
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: smart-brain-docker
+      Redis_URI: redis://redis:6379
+    links:
+      - postgres
+      - redis
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./:/usr/src/smart-brain-api-docker
+
+  # Postgres
+  postgres:
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: sally
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: smart-brain-docker
+    # container_name: postgres
+    build: ./postgres
+    ports:
+      - "5432:5432"
+
+  # Reids
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

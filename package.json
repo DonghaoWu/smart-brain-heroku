@@ -1,0 +1,33 @@
+{
+  "name": "smart-brain-prod",
+  "version": "1.0.0",
+  "description": "deploy on heroku without docker",
+  "main": "./backend-smart-brain-api-prod/server.js",
+  "scripts": {
+    "installAll": "concurrently \"npm run installServer\" \"npm run installClient\"",
+    "installServer": "cd backend-smart-brain-api-prod && npm install",
+    "installClient": "cd frontend-smart-brain-prod && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "npm start --prefix frontend-smart-brain-prod",
+    "server": "npm run server --prefix backend-smart-brain-api-prod",
+    "start": "npm start --prefix server",
+    "heroku-prebuild": "cd backend-smatr-brain-api-prod && npm install",
+    "heroku-postbuild": "cd frontend-smart-brain-prod && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonghaoWu/smart-brain-prod.git"
+  },
+  "keywords": [
+    "heroku-deploy-without-docker"
+  ],
+  "author": "Donghao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DonghaoWu/smart-brain-prod/issues"
+  },
+  "homepage": "https://github.com/DonghaoWu/smart-brain-prod#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
