@@ -223,7 +223,7 @@ const db = require('knex')({
 });
 ```
 
-- proxy
+- proxy, proxy 是需要的。
 
 ```json
   "proxy": "http://localhost:4000"
@@ -250,5 +250,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 ```
 
+
+- delete
+
+```js
+app.get('/', (req, res) => { res.send(`This message is from server.js. You will get this message when visit http://localhost:4000/`) })
+
+
+```
 
 
