@@ -25,14 +25,16 @@ const auth = require('./middlewares/authorization');
 //   }
 // });
 
-const pg = require('knex')({
+const db = require('knex')({
   client: 'pg',
-  connection: process.env.DATABASE_URL
+  connection: process.env.DATABASE_URL,
+  pool: { min: 0, max: 10 }
 });
 
 const app = express();
-app.use(morgan('tiny'));
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, db, bcrypt) })

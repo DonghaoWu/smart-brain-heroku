@@ -223,7 +223,7 @@ const db = require('knex')({
 });
 ```
 
-- proxy, proxy 是需要的。
+- proxy, __`proxy 是需要的。`__
 
 ```json
   "proxy": "http://localhost:4000"
