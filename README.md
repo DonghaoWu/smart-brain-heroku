@@ -211,5 +211,44 @@ heroku ps:scale web=1
 heroku open
 ```
 
+- others
+
+- pool
+
+```js
+const db = require('knex')({
+  client: 'pg',
+  connection: process.env.DATABASE_URL,
+  pool: { min: 0, max: 10 }
+});
+```
+
+- proxy
+
+```json
+  "proxy": "http://localhost:4000"
+```
+
+- .gitignore 
+
+```json
+# production
+/build
+```
+
+- app.use
+
+```js
+// const app = express();
+// app.use(morgan('tiny'));
+// app.use(cors());
+// app.use(bodyParser.json());
+
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+```
+
 
 
