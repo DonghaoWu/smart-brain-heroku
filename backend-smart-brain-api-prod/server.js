@@ -15,14 +15,19 @@ const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 const auth = require('./middlewares/authorization');
 
-const db = knex({
-  client: process.env.POSTGRES_CLIENT,
-  connection: {
-    host: process.env.POSTGRES_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB
-  }
+// const db = knex({
+//   client: process.env.POSTGRES_CLIENT,
+//   connection: {
+//     host: process.env.POSTGRES_HOST,
+//     user: process.env.POSTGRES_USER,
+//     password: process.env.POSTGRES_PASSWORD,
+//     database: process.env.POSTGRES_DB
+//   }
+// });
+
+const pg = require('knex')({
+  client: 'pg',
+  connection: process.env.DATABASE_URL
 });
 
 const app = express();
@@ -39,10 +44,9 @@ app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, 
 app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) })
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('frontend-smart-brain-prod/build'));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend-smart-brain-prod', 'build', 'index.html'))
+  app.use(express.static(path.join(__dirname, '../frontend-smart-brain-prod/build')));
+  app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend-smart-brain-prod/build/index.html'));
   })
 }
 

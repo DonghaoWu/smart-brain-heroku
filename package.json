@@ -10,9 +10,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "npm start --prefix frontend-smart-brain-prod",
     "server": "npm run server --prefix backend-smart-brain-api-prod",
-    "start": "npm start --prefix server",
-    "heroku-prebuild": "cd backend-smatr-brain-api-prod && npm install",
-    "heroku-postbuild": "cd frontend-smart-brain-prod && npm install"
+    "start": "npm start --prefix backend-smart-brain-api-prod",
+    "heroku-prebuild": "cd backend-smart-brain-api-prod && npm install",
+    "heroku-postbuild": "cd frontend-smart-brain-prod && npm install --only=dev && npm install && npm run build"
   },
   "repository": {
     "type": "git",

@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const redis = require('redis');
 
 // setup Redis:
-const redisClient = redis.createClient(process.env.REDIS_URI);
+// const redisClient = redis.createClient();
+const client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 
 const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
   const { email, password } = req.body;

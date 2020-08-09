@@ -4,7 +4,7 @@
   "main": "script.js",
   "scripts": {
     "start": "node server.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend-smart-brain-prod && npm run build --prefix frontend-smart-brain-prod"
+    "server": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
