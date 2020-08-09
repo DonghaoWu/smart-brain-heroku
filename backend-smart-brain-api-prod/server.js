@@ -7,7 +7,7 @@ const knex = require('knex');
 const morgan = require('morgan');
 
 const path = require('path');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
@@ -52,5 +52,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-  console.log('app is running on port 4000');
+  console.log('app is running on port 3001');
 })

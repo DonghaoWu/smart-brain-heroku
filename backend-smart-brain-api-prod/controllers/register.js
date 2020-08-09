@@ -39,11 +39,13 @@ const handleRegisterPromise = (req, res, db, bcrypt) => {
 }
 
 const signToken = (email) => {
+  console.log('inside signTOken')
   const jwtPayload = { email };
   return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '2 days' });
 }
 
 const setToken = (token, id) => {
+  console.log('inside set token')
   return Promise.resolve(redisClient.set(token, id))
 }
 
@@ -52,6 +54,7 @@ const createSession = (user) => {
   const token = signToken(email);
   return setToken(token, id)
     .then(() => {
+      console.log('ready to send session1')
       return {
         success: 'true',
         userId: id,
@@ -69,6 +72,7 @@ const registerAuthentication =(req, res,db, bcrypt)=>{
     return data.id && data.email ? createSession(data) : Promise.reject(data)
   })
   .then(session => {
+    console.log('ready to send session2');
     return res.json(session);
   })
   .catch(err => {
