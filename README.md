@@ -1,19 +1,29 @@
 # smart-brain-prod
 
-## `Download & connect to your gitHub.`
+### <span id="30.0">`Brief Contents & codes position`</span>
 
-  ```bash
-  $ git clone https://github.com/DonghaoWu/smart-brain-prod.git
-  $ cd smart-brain-prod
-  $ rm -fr .git
-  $ git init
-  $ git add .
-  $ git commit -m "first commit"
-  $ git remote add origin <your-repo-link>
-  $ git push -u origin master
-  ```
+- #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/WebDev-tools-demo/blob/master/README.md)
 
-## `Run the application locally.`
+- [30.1 Download & connect to your gitHub..](#30.1)
+- [30.2 Run the application locally.](#30.2)
+- [30.3 Heroku deploy the application.](#30.3)
+
+## <span id="30.1">`Download & connect to your gitHub.`</span>
+
+- #### Click here: [BACK TO CONTENT](#30.0)
+
+    ```bash
+    $ git clone https://github.com/DonghaoWu/smart-brain-prod.git
+    $ cd smart-brain-prod
+    $ rm -fr .git
+    $ git init
+    $ git add .
+    $ git commit -m "first commit"
+    $ git remote add origin <your-repo-link>
+    $ git push -u origin master
+    ```
+
+## <span id="30.2">`Run the application locally.`</span>
 
 1. Install dependencies.
 
@@ -122,7 +132,7 @@
     $ npm run dev
     ```
 
-## `Heroku deploy the application.`
+## <span id="30.3">`Heroku deploy the application.`</span>
 
 1. Create heroku app and addon redis & postgreSQL.
 
@@ -401,6 +411,8 @@
           });
     }
     ```
+
+- #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/WebDev-tools-demo/blob/master/README.md)
 
 
 
