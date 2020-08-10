@@ -122,134 +122,196 @@
 npm run dev
 ```
 
-### Heroku deploy
+### Heroku deploy the application
 
-```bash
-$ heroku login  # 登录 heroku
-$ heroku create smart-brain-prod-2020 # 定制 app 名字
-$ heroku addons:create heroku-postgresql:hobby-dev --name=smart-brain-2020-db # 新增一个 postgreSQL 的 database。
+1. Create heroku app and addon redis & postgreSQL.
 
-$ heroku addons:attach smart-brain-2020-db --app=smart-brain-prod-2020 # 设定 app 和 db 对接
+  ```bash
+  $ heroku login  # 登录 heroku
 
-$ heroku pg:psql --app smart-brain-prod-2020 # 进入 app 对应的 db 的命令行
-```
+  $ heroku create <your-heroku-app-name> # 定制 app 名字
 
-```sql
-CREATE TABLE login (
-    id serial PRIMARY KEY,
-    hash VARCHAR(100) NOT NULL,
-    email text UNIQUE NOT NULL
-);
+  heroku addons:create heroku-redis:hobby-dev # 新增一个 redis
 
-CREATE TABLE users (
-    id serial PRIMARY KEY,
-    name VARCHAR(100),
-    email text UNIQUE NOT NULL,
-    entries BIGINT DEFAULT 0,
-    joined TIMESTAMP NOT NULL,
-    pet VARCHAR(100),
-    age BIGINT
-);
-```
+  $ heroku addons:create heroku-postgresql:hobby-dev --name=<your-heroku-addon-db-name> # 新增一个 postgreSQL 的 database。
 
-```bash
-\q
-heroku addons:create heroku-redis:hobby-dev
-```
+  $ heroku addons:attach <your-heroku-addon-db-name> --app=<your-heroku-app-name> # 设定 app 和 db 对接
 
-- package.json
+  $ heroku pg:psql --app <your-heroku-app-name> # 进入 app 对应的 db 的命令行
+  ```
 
-```json
-{
-  "name": "smart-brain-prod",
-  "version": "1.0.0",
-  "description": "deploy on heroku without docker",
-  "main": "./backend-smart-brain-api-prod/server.js",
-  "scripts": {
-    "installAll": "concurrently \"npm run installServer\" \"npm run installClient\"",
-    "installServer": "cd backend-smart-brain-api-prod && npm install",
-    "installClient": "cd frontend-smart-brain-prod && npm install",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "npm start --prefix frontend-smart-brain-prod",
-    "server": "npm run server --prefix backend-smart-brain-api-prod",
-    "start": "npm start --prefix backend-smart-brain-api-prod",
-    "heroku-prebuild": "cd backend-smart-brain-api-prod && npm install",
-    "heroku-postbuild": "cd frontend-smart-brain-prod && npm install --only=dev && npm install && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DonghaoWu/smart-brain-prod.git"
-  },
-  "keywords": [
-    "heroku-deploy-without-docker"
-  ],
-  "author": "Donghao",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DonghaoWu/smart-brain-prod/issues"
-  },
-  "homepage": "https://github.com/DonghaoWu/smart-brain-prod#readme",
-  "devDependencies": {
-    "concurrently": "^5.3.0"
+  ```sql
+  CREATE TABLE login (
+      id serial PRIMARY KEY,
+      hash VARCHAR(100) NOT NULL,
+      email text UNIQUE NOT NULL
+  );
+
+  CREATE TABLE users (
+      id serial PRIMARY KEY,
+      name VARCHAR(100),
+      email text UNIQUE NOT NULL,
+      entries BIGINT DEFAULT 0,
+      joined TIMESTAMP NOT NULL,
+      pet VARCHAR(100),
+      age BIGINT
+  );
+  ```
+
+  - Quit sql command line.
+  ```bash
+  \q
+  ```
+
+2. Heroku environment variables setup.
+
+  ```diff
+  + DATABASE_URL
+  + HEROKU_POSTGRESQL_GRAY_URL
+  + REDIS_URL
+  + API_KEY
+  + JWT_SECRET
+  ```
+
+<p align="center">
+<img src="./assets/p30-01.png" width=90%>
+</p>
+
+------------------------------------------------------------
+
+<p align="center">
+<img src="./assets/p30-02.png" width=90%>
+</p>
+
+------------------------------------------------------------
+
+
+3. package.json，这一步的 scripts 设计需要严谨。
+
+  __`Location: ./package.json`__
+
+  ```json
+  {
+    "name": "smart-brain-prod",
+    "version": "1.0.0",
+    "description": "deploy on heroku without docker",
+    "main": "./backend-smart-brain-api-prod/server.js",
+    "scripts": {
+      "installAll": "concurrently \"npm run installServer\" \"npm run installClient\"",
+      "installServer": "cd backend-smart-brain-api-prod && npm install",
+      "installClient": "cd frontend-smart-brain-prod && npm install",
+      "dev": "concurrently \"npm run server\" \"npm run client\"",
+      "client": "npm start --prefix frontend-smart-brain-prod",
+      "server": "npm run server --prefix backend-smart-brain-api-prod",
+      "start": "npm start --prefix backend-smart-brain-api-prod",
+      "heroku-prebuild": "cd backend-smart-brain-api-prod && npm install",
+      "heroku-postbuild": "cd frontend-smart-brain-prod && npm install --only=dev && npm install && npm run build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/DonghaoWu/smart-brain-prod.git"
+    },
+    "keywords": [
+      "heroku-deploy-without-docker"
+    ],
+    "author": "Donghao",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/DonghaoWu/smart-brain-prod/issues"
+    },
+    "homepage": "https://github.com/DonghaoWu/smart-brain-prod#readme",
+    "devDependencies": {
+      "concurrently": "^5.3.0"
+    }
   }
-}
-```
+  ```
 
-- redis and postgreSQL  heroku setup
-Location: ./backend-smart-brain-api-prod/controllers/register.js
+4. Heroku redis setup.
 
-Location: ./backend-smart-brain-api-prod/controllers/signin.js
+  __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
+  __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
+  __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
 
-Location: ./backend-smart-brain-api-prod/middlewares/authorization.js
+  ```js
+  const redis = require('redis');
+  const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+  ```
 
-```js
-const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
-```
+5. PostgreSQL database setup.
+  __`Location: ./backend-smart-brain-api-prod/server.js`__
 
-- database
-Location: ./backend-smart-brain-api-prod/server.js
+  ```js
+  const pg = require('knex')({
+    client: 'pg',
+    connection: process.env.DATABASE_URL
+  });
+  ```
 
-```js
-const pg = require('knex')({
-  client: 'pg',
-  connection: process.env.DATABASE_URL
-});
-```
+6. Add static file:
+  __`Location: ./backend-smart-brain-api-prod/server.js`__
 
-- static file:
+  ```js
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend-smart-brain-prod/build')));
+    app.use((req, res) => {
+      res.sendFile(path.join(__dirname, '../frontend-smart-brain-prod/build/index.html'));
+    })
+  }
+  ```
 
-```js
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend-smart-brain-prod/build')));
-  app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend-smart-brain-prod/build/index.html'));
-  })
-}
-```
+7. Proxy in frontend. 
 
-- environment variables:
+  __`Location: ./frontend-smart-brain-prod/package.json`__
 
-```diff
-+ DATABASE_URL
-+ HEROKU_POSTGRESQL_GRAY_URL
-+ REDIS_URL
-+ API_KEY
-+ JWT_SECRET
-```
+  ```json
+  "proxy": "http://localhost:4000"
+  ```
+
+  #### `Comment:`
+  1. 其实 proxy 是否添加对于 deploy 是没有影响的，主要是添加 proxy 之后前端的一些连接后端代码就需要改变，如：
+
+  ```diff
+  -   fetch('http://localhost:4000/signin', {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': token
+        }
+      })
+
+  +   fetch('/signin', {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': token
+        }
+      })
+  ```
+
+  2. 但是如果不改变的话 deploy 在 heroku 上面就会出现错误：
+
+<p align="center">
+<img src="./assets/p30-03.png" width=90%>
+</p>
+
+------------------------------------------------------------
+
+  - 而且增加 proxy 重新 deploy 也会继续错误，这个时候需要点击浏览器上面的 `Empty Cache and hard reload`. :star::star::star: 这也是一个调试了很久的 bug。
 
 
-- deploy
 
-```bash
-git remote -v
-heroku git:remote -a smart-brain-prod-2020
-git add .
-git commit -m'ready for deploy'
-git push heroku master
-heroku ps:scale web=1
-heroku open
-```
+
+7. Deploy.
+
+  ```bash
+  git remote -v
+  heroku git:remote -a <your-heroku-app-name>
+  git add .
+  git commit -m'ready for deploy'
+  git push heroku master
+  heroku ps:scale web=1
+  heroku open
+  ```
 
 - others
 

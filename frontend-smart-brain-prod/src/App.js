@@ -50,7 +50,7 @@ class App extends Component {
   componentDidMount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      fetch('/signin', {
+      fetch('http://localhost:4000/signin', {
         method: 'post',
         headers: {
           'Content-type': 'application/json',
