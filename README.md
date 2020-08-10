@@ -298,6 +298,8 @@ npm run dev
 
   - 而且增加 proxy 重新 deploy 也会继续错误，这个时候需要点击浏览器上面的 `Empty Cache and hard reload`. :star::star::star: 这也是一个调试了很久的 bug。
 
+  3. :star::star::star: 所以一个好的开发习惯是加上 proxy 并简化前端 fetch link，这样在 deploy 的时候少一点 bug。
+
 
 
 
