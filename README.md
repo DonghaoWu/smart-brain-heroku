@@ -30,14 +30,14 @@
   $ src/redis-server
   ```
 
-  1. 查看正使用的 redis 本地端口。
+  - 查看正使用的 redis 本地端口。
 
     ```bash
     $ ps aux | grep redis
     $ kill -9 <port-number> # stop a port redis service
     ```
 
-  2. 进入 redis CLI。
+  - 进入 redis CLI。
 
     ```bash
     $ cd
@@ -48,7 +48,9 @@
 3. Local redis setup.
 
   __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
+
   __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
+
   __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
 
   ```js
@@ -88,13 +90,13 @@
   });
   ```
 
-  1. 这里的 connection 可以使用 URI 代替，比如：[postgreSQL connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
+  - 这里的 connection 可以使用 URI 代替，比如：[postgreSQL connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
 
 6. Create postgreSQL database and tables:
 
-  1. Create database: postico [check here](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
+  - Create database: postico [check here](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
 
-  2. Create tables:
+  - Create tables:
 
   ```sql
   CREATE TABLE login (
@@ -116,9 +118,9 @@
 
 7. Run the application locally.
 
-```bash
-npm run dev
-```
+  ```bash
+  npm run dev
+  ```
 
 ## `Heroku deploy the application.`
 
@@ -227,7 +229,9 @@ npm run dev
 4. Heroku redis setup.
 
   __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
+
   __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
+
   __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
 
   ```js
@@ -236,6 +240,7 @@ npm run dev
   ```
 
 5. PostgreSQL database setup.
+
   __`Location: ./backend-smart-brain-api-prod/server.js`__
 
   ```js
@@ -246,6 +251,7 @@ npm run dev
   ```
 
 6. Add static file:
+
   __`Location: ./backend-smart-brain-api-prod/server.js`__
 
   ```js
@@ -265,7 +271,7 @@ npm run dev
   "proxy": "http://localhost:4000"
   ```
 
-  1. 其实 proxy 是否添加对于 deploy 是没有影响的，主要是添加 proxy 之后前端的一些连接后端代码就需要改变，如：
+  - 其实 proxy 是否添加对于 deploy 是没有影响的，主要是添加 proxy 之后前端的一些连接后端代码就需要改变，如：
 
   ```diff
   -   fetch('http://localhost:4000/signin', {
@@ -285,7 +291,7 @@ npm run dev
       })
   ```
 
-  2. 但是如果不改变的话 deploy 在 heroku 上面就会出现错误：
+  - 但是如果不改变的话 deploy 在 heroku 上面就会出现错误：
 
 <p align="center">
 <img src="./assets/p30-03.png" width=90%>
@@ -295,9 +301,9 @@ npm run dev
 
   - 而且增加 proxy 重新 deploy 也会继续错误，这个时候需要点击浏览器上面的 `Empty Cache and hard reload`. :star::star::star: 这也是一个调试了很久的 bug。
 
-  3. :star::star: 所以一个好的开发习惯是加上 proxy 并简化前端 fetch link，这样在 deploy 的时候少一点 bug。
+  - :star::star: 所以一个好的开发习惯是加上 proxy 并简化前端 fetch link，这样在 deploy 的时候少一点 bug。
 
-  4. :star::star: Proxy 加上简化 fetch link 的作用在于方便本地调试，实际上但使用 fetch link 就可以 deploy。
+  - :star::star: Proxy 加上简化 fetch link 的作用在于方便本地调试，实际上但使用 fetch link 就可以 deploy。
 
 8. Deploy.
 
@@ -311,7 +317,7 @@ npm run dev
   heroku open
   ```
 
-  1. `git remote -v`: 检查当前 app 对应的所有 repos。
+  - `git remote -v`: 检查当前 app 对应的所有 repos。
 
 
 ## `Other discussion.`
