@@ -50,7 +50,7 @@ class App extends Component {
   componentDidMount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:4000/signin', {
+      fetch('/signin', {
         method: 'post',
         headers: {
           'Content-type': 'application/json',
@@ -60,7 +60,7 @@ class App extends Component {
         .then(res => res.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`http://localhost:4000/profile/${data.id}`, {
+            fetch(`/profile/${data.id}`, {
               method: 'get',
               headers: {
                 'Content-type': 'application/json',
@@ -128,7 +128,7 @@ class App extends Component {
       return;
     }
     this.setState({ imageUrl: this.state.input });
-    fetch('http://localhost:4000/imageurl', {
+    fetch('/imageurl', {
       method: 'post',
       headers: {
         'Content-type': 'application/json',
@@ -140,7 +140,7 @@ class App extends Component {
     }).then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:4000/image', {
+          fetch('/image', {
             method: 'put',
             headers: {
               'Content-type': 'application/json',

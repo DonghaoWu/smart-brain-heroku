@@ -357,6 +357,12 @@
 
 5. 常见错误：
 
+    - 错误类型：
+    - 发生错误原因：
+        - 写错 variable。
+        - 没有在 heroku 添加 API_KEY。
+        - 以此估计出现这个错误的原因是 `代码错误`。
+
 <p align="center">
 <img src="./assets/p30-04.png" width=90%>
 </p>
