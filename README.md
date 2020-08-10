@@ -30,7 +30,6 @@
   $ src/redis-server
   ```
 
-  #### `Comment:`
   1. 查看正使用的 redis 本地端口。
 
     ```bash
@@ -89,7 +88,6 @@
   });
   ```
 
-  #### `Comment:`
   1. 这里的 connection 可以使用 URI 代替，比如：[postgreSQL connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
 
 6. Create postgreSQL database and tables:
@@ -267,7 +265,6 @@ npm run dev
   "proxy": "http://localhost:4000"
   ```
 
-  #### `Comment:`
   1. 其实 proxy 是否添加对于 deploy 是没有影响的，主要是添加 proxy 之后前端的一些连接后端代码就需要改变，如：
 
   ```diff
@@ -314,7 +311,6 @@ npm run dev
   heroku open
   ```
 
-  #### `Comment:`
   1. `git remote -v`: 检查当前 app 对应的所有 repos。
 
 
