@@ -3,14 +3,14 @@
 ## `Download & connect to your gitHub.`
 
   ```bash
-  git clone https://github.com/DonghaoWu/smart-brain-prod.git
-  cd smart-brain-prod
-  rm -fr .git
-  git init
-  git add .
-  git commit -m "first commit"
-  git remote add origin <your-repo-link>
-  git push -u origin master
+  $ git clone https://github.com/DonghaoWu/smart-brain-prod.git
+  $ cd smart-brain-prod
+  $ rm -fr .git
+  $ git init
+  $ git add .
+  $ git commit -m "first commit"
+  $ git remote add origin <your-repo-link>
+  $ git push -u origin master
   ```
 
 ## `Run the application locally.`
@@ -18,8 +18,8 @@
 1. Install dependencies.
 
   ```bash
-  npm i
-  npm run installAll
+  $ npm i
+  $ npm run installAll
   ```
 
 2. [Download](https://redis.io/download) & Run redis server.
@@ -119,7 +119,7 @@
 7. Run the application locally.
 
   ```bash
-  npm run dev
+  $ npm run dev
   ```
 
 ## `Heroku deploy the application.`
@@ -299,7 +299,7 @@
 
 ------------------------------------------------------------
 
-  - 而且增加 proxy 重新 deploy 也会继续错误，这个时候需要点击浏览器上面的 `Empty Cache and hard reload`. :star::star::star: 这也是一个调试了很久的 bug。
+  - 而且增加 proxy 重新 deploy 也会继续错误，这个时候需要点击浏览器上面的 :star::star::star: `Empty Cache and hard reload`. 这也是一个调试了很久的 bug。
 
   - :star::star: 所以一个好的开发习惯是加上 proxy 并简化前端 fetch link，这样在 deploy 的时候少一点 bug。
 
