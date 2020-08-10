@@ -60,7 +60,7 @@ class App extends Component {
         .then(res => res.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`/profile/${data.id}`, {
+            fetch(`http://localhost:4000/profile/${data.id}`, {
               method: 'get',
               headers: {
                 'Content-type': 'application/json',
@@ -128,7 +128,7 @@ class App extends Component {
       return;
     }
     this.setState({ imageUrl: this.state.input });
-    fetch('/imageurl', {
+    fetch('http://localhost:4000/imageurl', {
       method: 'post',
       headers: {
         'Content-type': 'application/json',
@@ -140,7 +140,7 @@ class App extends Component {
     }).then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('/image', {
+          fetch('http://localhost:4000/image', {
             method: 'put',
             headers: {
               'Content-type': 'application/json',
