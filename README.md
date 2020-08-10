@@ -8,7 +8,7 @@
 - [30.2 Run the application locally.](#30.2)
 - [30.3 Heroku deploy the application.](#30.3)
 
-## <span id="30.1">`Download & connect to your gitHub.`</span>
+### <span id="30.1">`Download & connect to your gitHub.`</span>
 
 - #### Click here: [BACK TO CONTENT](#30.0)
 
@@ -23,7 +23,9 @@
     $ git push -u origin master
     ```
 
-## <span id="30.2">`Run the application locally.`</span>
+### <span id="30.2">`Run the application locally.`</span>
+
+- #### Click here: [BACK TO CONTENT](#30.0)
 
 1. Install dependencies.
 
@@ -132,7 +134,9 @@
     $ npm run dev
     ```
 
-## <span id="30.3">`Heroku deploy the application.`</span>
+### <span id="30.3">`Heroku deploy the application.`</span>
+
+- #### Click here: [BACK TO CONTENT](#30.0)
 
 1. Create heroku app and addon redis & postgreSQL.
 
