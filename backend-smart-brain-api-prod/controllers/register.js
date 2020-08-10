@@ -69,7 +69,6 @@ const registerAuthentication =(req, res,db, bcrypt)=>{
     return res.json(session);
   })
   .catch(err => {
-    console.log(err);
     return res.status(400).json(err);
   });
 }

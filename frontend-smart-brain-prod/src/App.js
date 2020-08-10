@@ -77,7 +77,6 @@ class App extends Component {
           }
         })
         .catch(err => {
-          console.log();
         })
     }
   }
@@ -154,11 +153,11 @@ class App extends Component {
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count }))
             })
-            .catch(console.log)
+            .catch()
         }
         this.displayFaceBox(this.calculateFaceLocations(response))
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log);
   }
 
   onRouteChange = (route) => {

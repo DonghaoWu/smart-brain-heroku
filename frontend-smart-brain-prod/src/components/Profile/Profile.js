@@ -35,7 +35,7 @@ class Profile extends Component {
                 this.props.loadUser({ ...this.props.user, ...data });
             }
         }).catch(err => {
-            console.log(err);
+            console.log();
         })
     }
 
