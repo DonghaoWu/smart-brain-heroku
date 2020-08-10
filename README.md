@@ -94,7 +94,7 @@
 
 6. Create postgreSQL database and tables:
 
-    - Create database: postico [check here](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
+    - Create database: postico [CHECK HERE](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
 
     - Create tables:
 
