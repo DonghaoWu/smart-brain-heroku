@@ -1,82 +1,122 @@
 # smart-brain-prod
 
-```bash
-rm -fr .git
-git init
-git add .
-git commit -m "first commit"
-git remote add origin https://github.com/DonghaoWu/smart-brain-prod.git
-git push -u origin master
+### Download & connect to your gitHub.
 
-```
+  ```bash
+  git clone https://github.com/DonghaoWu/smart-brain-prod.git
+  cd smart-brain-prod
+  rm -fr .git
+  git init
+  git add .
+  git commit -m "first commit"
+  git remote add origin <your-repo-link>
+  git push -u origin master
+  ```
 
-- local
+### Run the application locally.
 
-```bash
-npm i
-npm run installAll
+1. Install dependencies.
 
-$ cd
-$ cd redis-6.0.6
-$ src/redis-server
+  ```bash
+  npm i
+  npm run installAll
+  ```
 
-ps aux | grep redis
-```
+2. [Download](https://redis.io/download) & Run redis server.
 
-### local redis
+  ```bash
+  $ cd
+  $ cd redis-6.0.6
+  $ src/redis-server
+  ```
 
-Location: ./backend-smart-brain-api-prod/controllers/register.js
+  #### `Comment:`
+  1. 查看正使用的 redis 本地端口。
 
-Location: ./backend-smart-brain-api-prod/controllers/signin.js
+    ```bash
+    $ ps aux | grep redis
+    $ kill -9 <port-number> # stop a port redis service
+    ```
 
-Location: ./backend-smart-brain-api-prod/middlewares/authorization.js
+  2. 进入 redis CLI。
 
-```js
-const redis = require('redis');
-const redisClient = redis.createClient();
-```
+    ```bash
+    $ cd
+    $ cd redis-6.0.6
+    $ src/redis-cli
+    ```
 
-- local database
-Location: ./backend-smart-brain-api-prod/server.js
+3. Local redis setup.
 
-```js
-const db = knex({
-  client: process.env.POSTGRES_CLIENT,
-  connection: {
-    host: process.env.POSTGRES_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB
-  }
-});
-```
+  __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
+  __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
+  __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
 
-- local .env file
+  ```js
+  const redis = require('redis');
+  const redisClient = redis.createClient(6379);
+  // const redisClient = redis.createClient();
+  ```
 
-- Create postgreSQL database and tables:
+4. Local .env file.
 
-1. Create database: postico
-2. Create tables:
+  __`Location: ./backend-smart-brain-api-prod/.env`__
 
-```sql
-CREATE TABLE login (
-    id serial PRIMARY KEY,
-    hash VARCHAR(100) NOT NULL,
-    email text UNIQUE NOT NULL
-);
+  ```env
+  POSTGRES_CLIENT=<--->
+  POSTGRES_HOST=<--->
+  POSTGRES_USER=<--->
+  POSTGRES_PASSWORD=<--->
+  POSTGRES_DB=<--->
 
-CREATE TABLE users (
-    id serial PRIMARY KEY,
-    name VARCHAR(100),
-    email text UNIQUE NOT NULL,
-    entries BIGINT DEFAULT 0,
-    joined TIMESTAMP NOT NULL,
-    pet VARCHAR(100),
-    age BIGINT
-);
-```
+  API_KEY=<--->
+  JWT_SECRET=<--->
+  ```
 
-- Run the application locally.
+5. Download, install [postgreSQL](https://www.postgresql.org/) & Local postgreSQL setup.
+
+  __`Location: ./backend-smart-brain-api-prod/server.js`__
+
+  ```js
+  const db = knex({
+    client: process.env.POSTGRES_CLIENT,
+    connection: {
+      host: process.env.POSTGRES_HOST,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB
+    }
+  });
+  ```
+
+  #### `Comment:`
+  1. 这里的 connection 可以使用 URI 代替，比如：[postgreSQL connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
+
+6. Create postgreSQL database and tables:
+
+  1. Create database: postico [check here](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
+
+  2. Create tables:
+
+  ```sql
+  CREATE TABLE login (
+      id serial PRIMARY KEY,
+      hash VARCHAR(100) NOT NULL,
+      email text UNIQUE NOT NULL
+  );
+
+  CREATE TABLE users (
+      id serial PRIMARY KEY,
+      name VARCHAR(100),
+      email text UNIQUE NOT NULL,
+      entries BIGINT DEFAULT 0,
+      joined TIMESTAMP NOT NULL,
+      pet VARCHAR(100),
+      age BIGINT
+  );
+  ```
+
+7. Run the application locally.
 
 ```bash
 npm run dev
@@ -275,6 +315,5 @@ app.use(bodyParser.json());
 
 3. 知道处理错误时 在哪里添加 console.log，上一个未知错误的发现是在 signin.js 中的 signinAuthentication 的 catch block 中 加入 `console.log(err)`
 
-4. 
 
 

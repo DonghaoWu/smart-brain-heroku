@@ -7,7 +7,7 @@ const knex = require('knex');
 const morgan = require('morgan');
 
 const path = require('path');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4000;
 
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
