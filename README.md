@@ -164,7 +164,7 @@ Location: ./backend-smart-brain-api-prod/middlewares/authorization.js
 
 ```js
 const redis = require('redis');
-const client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 ```
 
 - database
@@ -250,13 +250,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 ```
 
+- port ?
 
 - delete
 
 ```js
 app.get('/', (req, res) => { res.send(`This message is from server.js. You will get this message when visit http://localhost:4000/`) })
-
-
 ```
+
+hard refresh and empty cache.
+
+### 补充：
+
+1. 恢复 port 到 4000，恢复删除 db pool， 使用
+
+```js
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+```
+
+2. 删除 console.log
+
+3. 知道处理错误时 在哪里添加 console.log，上一个未知错误的发现是在 signin.js 中的 signinAuthentication 的 catch block 中 加入 `console.log(err)`
+
+4. 
 
 

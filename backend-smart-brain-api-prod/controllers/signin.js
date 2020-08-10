@@ -1,13 +1,9 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
-
-// setup Redis:
-// const redisClient = redis.createClient();
 const redisClient = redis.createClient(process.env.REDIS_URL, { no_ready_check: true });
 
 
 const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
-  console.log('hit signin route in backend');
   const { email, password } = req.body;
   if (!email || !password) {
     return Promise.reject('incorrect form submission');
@@ -41,23 +37,19 @@ const hasTokenAndGetIdFromRedis = (req, res) => {
 }
 
 const signToken = (email) => {
-  console.log('hit here in generate token by jwt');
   const jwtPayload = { email };
   return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '2 days' });
 }
 
 const setToken = (token, id) => {
-  console.log('hit here in storing token in redis');
   return Promise.resolve(redisClient.set(token, id))
 }
 
 const createSession = (user) => {
-  console.log('hit here in createSession');
   const { email, id } = user;
   const token = signToken(email);
   return setToken(token, id)
     .then(() => {
-      console.log('generate token success', token)
       return {
         success: 'true',
         userId: id,
@@ -74,15 +66,12 @@ const signinAuthentication = (req, res, db, bcrypt) => {
   return authorization ? hasTokenAndGetIdFromRedis(req, res)
     : noTokenSigninAndGetUser(req, res, db, bcrypt)
       .then(data => {
-        console.log('generate data', data);
         return data.id && data.email ? createSession(data) : Promise.reject(data)
       })
       .then(session => {
-        console.log('generate session', session);
         return res.json(session);
       })
       .catch(err => {
-        console.log(err)
         return res.status(400).json(err)
       });
 }
