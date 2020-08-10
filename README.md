@@ -295,7 +295,7 @@
 
     - :star::star: 所以一个好的开发习惯是加上 proxy 并简化前端 fetch link，这样在 deploy 的时候少一点 bug。
 
-    - :star::star: Proxy 加上简化 fetch link 的作用在于方便本地调试，实际上但使用 fetch link 就可以 deploy。
+    - :star::star: Proxy 加上简化 fetch link 的作用在于方便本地调试，实际上但使用 fetch link 就可以 deploy，proxy 对 deploy 没有作用。
 
     - 但是如果不改变的话 deploy 在 heroku 上面就会出现错误：
 
@@ -318,7 +318,6 @@
     ```
 
     - `git remote -v`: 检查当前 app 对应的所有 repos。
-
 
 ## `Other discussion.`
 
@@ -357,17 +356,29 @@
 
 5. 常见错误：
 
-    - 错误类型：
+    - 错误类型：`POST https://smart-brain-prod-2020.herokuapp.com/register 400 (Bad Request)`
     - 发生错误原因：
         - 写错 variable。
         - 没有在 heroku 添加 API_KEY。
         - 以此估计出现这个错误的原因是 `代码错误`。
 
-<p align="center">
-<img src="./assets/p30-04.png" width=90%>
-</p>
+    <p align="center">
+    <img src="./assets/p30-04.png" width=90%>
+    </p>
 
-----------------------------------------------------------
+    ----------------------------------------------------------
+
+    - Check the herolu logs
+
+    ```bash
+    $ heroku logs --tail
+    ```
+
+    <p align="center">
+    <img src="./assets/p30-05.png" width=90%>
+    </p>
+
+    ----------------------------------------------------------
 
 6. 知道处理错误时 在哪里添加 console.log，上一个未知错误的发现是在 signin.js 中的 signinAuthentication 的 catch block 中加入 `console.log(err)`，如：
 
