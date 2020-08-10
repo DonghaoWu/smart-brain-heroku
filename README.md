@@ -122,7 +122,7 @@
 npm run dev
 ```
 
-### Heroku deploy the application
+### Heroku deploy the application.
 
 1. Create heroku app and addon redis & postgreSQL.
 
@@ -302,10 +302,7 @@ npm run dev
 
   4. :star::star: Proxy 加上简化 fetch link 的作用在于方便本地调试，实际上但使用 fetch link 就可以 deploy。
 
-
-
-
-7. Deploy.
+8. Deploy.
 
   ```bash
   git remote -v
@@ -317,9 +314,13 @@ npm run dev
   heroku open
   ```
 
-- others
+  #### `Comment:`
+  1. `git remote -v`: 检查当前 app 对应的所有 repos。
 
-- pool
+
+### Other discussion.
+
+1. Should add pool? `NO.`
 
 ```js
 const db = require('knex')({
@@ -329,20 +330,14 @@ const db = require('knex')({
 });
 ```
 
-- proxy, __`proxy 是需要的。`__
-
-```json
-  "proxy": "http://localhost:4000"
-```
-
-- .gitignore 
+2. Should delete this part in .gitignore? `NO.`
 
 ```json
 # production
 /build
 ```
 
-- app.use
+3. Should change these code in server.js? `NO.`
 
 ```js
 // const app = express();
@@ -356,30 +351,37 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 ```
 
-- port ?
+4. Should change backend port? `NO.`
 
-- delete
+5. 常见错误：
 
-```js
-app.get('/', (req, res) => { res.send(`This message is from server.js. You will get this message when visit http://localhost:4000/`) })
-```
+<p align="center">
+<img src="./assets/p30-04.png" width=90%>
+</p>
 
-hard refresh and empty cache.
+----------------------------------------------------------
 
-### 补充：
+6. 知道处理错误时 在哪里添加 console.log，上一个未知错误的发现是在 signin.js 中的 signinAuthentication 的 catch block 中加入 `console.log(err)`，如：
 
-1. 恢复 port 到 4000，恢复删除 db pool， 使用
+  __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
 
-```js
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-```
-
-2. 删除 console.log
-
-3. 知道处理错误时 在哪里添加 console.log，上一个未知错误的发现是在 signin.js 中的 signinAuthentication 的 catch block 中 加入 `console.log(err)`
+  ```diff
+  const signinAuthentication = (req, res, db, bcrypt) => {
+    const { authorization } = req.headers;
+    return authorization ? hasTokenAndGetIdFromRedis(req, res)
+      : noTokenSigninAndGetUser(req, res, db, bcrypt)
+        .then(data => {
+          return data.id && data.email ? createSession(data) : Promise.reject(data)
+        })
+        .then(session => {
+          return res.json(session);
+        })
+        .catch(err => {
+  +          console.log(err)
+          return res.status(400).json(err)
+        });
+  }
+  ```
 
 
 
