@@ -1,6 +1,6 @@
 # smart-brain-prod
 
-### Download & connect to your gitHub.
+## `Download & connect to your gitHub.`
 
   ```bash
   git clone https://github.com/DonghaoWu/smart-brain-prod.git
@@ -13,7 +13,7 @@
   git push -u origin master
   ```
 
-### Run the application locally.
+## `Run the application locally.`
 
 1. Install dependencies.
 
@@ -122,7 +122,7 @@
 npm run dev
 ```
 
-### Heroku deploy the application.
+## `Heroku deploy the application.`
 
 1. Create heroku app and addon redis & postgreSQL.
 
@@ -318,7 +318,7 @@ npm run dev
   1. `git remote -v`: 检查当前 app 对应的所有 repos。
 
 
-### Other discussion.
+## `Other discussion.`
 
 1. Should add pool? `NO.`
 
