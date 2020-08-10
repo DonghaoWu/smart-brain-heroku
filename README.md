@@ -24,26 +24,26 @@
 
 2. [Download](https://redis.io/download) & Run redis server.
 
-  ```bash
-  $ cd
-  $ cd redis-6.0.6
-  $ src/redis-server
-  ```
-
-  - 查看正使用的 redis 本地端口。
-
-    ```bash
-    $ ps aux | grep redis
-    $ kill -9 <port-number> # stop a port redis service
-    ```
-
-  - 进入 redis CLI。
-
     ```bash
     $ cd
     $ cd redis-6.0.6
-    $ src/redis-cli
+    $ src/redis-server
     ```
+
+    - 查看正使用的 redis 本地端口。
+
+      ```bash
+      $ ps aux | grep redis
+      $ kill -9 <port-number> # stop a port redis service
+      ```
+
+    - 进入 redis CLI。
+
+      ```bash
+      $ cd
+      $ cd redis-6.0.6
+      $ src/redis-cli
+      ```
 
 3. Local redis setup.
 
@@ -379,7 +379,7 @@ app.use(bodyParser.json());
           return res.json(session);
         })
         .catch(err => {
-  +          console.log(err)
+  +       console.log(err)
           return res.status(400).json(err)
         });
   }
