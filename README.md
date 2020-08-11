@@ -1,5 +1,7 @@
 # smart-brain-prod
 
+### Application link: [https://smart-brain-prod-2020.herokuapp.com/](https://smart-brain-prod-2020.herokuapp.com/)
+
 ### <span id="30.1">`Download & connect to your gitHub.`</span>
 
 
@@ -43,10 +45,9 @@
     ```js
     const redis = require('redis');
     const redisClient = redis.createClient(6379);
-    // const redisClient = redis.createClient();
     ```
 
-4. Local .env file.
+4. Add Local .env file.
 
     __`Location: ./backend-smart-brain-api-prod/.env`__
 
@@ -77,7 +78,7 @@
     });
     ```
 
-6. Create postgreSQL database and tables:
+6. Create local postgreSQL database and tables:
 
     - Create database: postico [CHECK HERE](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
 
@@ -152,9 +153,6 @@
 2. Heroku environment variables setup.
 
     ```diff
-    + DATABASE_URL
-    + HEROKU_POSTGRESQL_GRAY_URL
-    + REDIS_URL
     + API_KEY
     + JWT_SECRET
     ```
