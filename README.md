@@ -4,17 +4,18 @@
 
 ### <span id="30.1">`Download & connect to your gitHub.`</span>
 
+```bash
+$ git clone https://github.com/DonghaoWu/smart-brain-prod.git
+$ cd smart-brain-prod
+$ rm -fr .git
+$ git init
+$ git add .
+$ git commit -m "first commit"
+$ git remote add origin <your-repo-link>
+$ git push -u origin master
+```
 
-    ```bash
-    $ git clone https://github.com/DonghaoWu/smart-brain-prod.git
-    $ cd smart-brain-prod
-    $ rm -fr .git
-    $ git init
-    $ git add .
-    $ git commit -m "first commit"
-    $ git remote add origin <your-repo-link>
-    $ git push -u origin master
-    ```
+### Add a lambda endpoint and apply it in front end., [visit here.](https://github.com/DonghaoWu/WebDev-tools-demo/blob/master/AWS/AWS.md)
 
 ### <span id="30.2">`Run the application locally.`</span>
 
