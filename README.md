@@ -1,4 +1,6 @@
-# smart-brain-prod
+# smart-brain-heroku
+
+## This documentation is about how to download this repo and deploy it on Heroku.
 
 ### Application link: [https://smart-brain-prod-2020.herokuapp.com/](https://smart-brain-prod-2020.herokuapp.com/)
 
