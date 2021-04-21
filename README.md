@@ -31,7 +31,7 @@ $ git push -u origin master
     $ npm run installAll
     ```
 
-2. [Download](https://redis.io/download) & Run redis server.
+2. [Download](https://redis.io/download) & Run redis server(6.2.2).
 
     - Download
     ```bash
@@ -56,7 +56,7 @@ $ git push -u origin master
 
     ```js
     const redis = require('redis');
-    const redisClient = redis.createClient(6379);
+    const redisClient = redis.createClient(process.env.REDIS_URL || 6379, { no_ready_check: true });
     ```
 
 4. Add Local .env file.
@@ -74,19 +74,27 @@ $ git push -u origin master
     JWT_SECRET=<--->
     ```
 
-5. Download, install [postgreSQL](https://www.postgresql.org/) & Local postgreSQL setup.
+5. Download, install [postgreSQL](https://www.postgresql.org/) & postgreSQL setup.
 
     __`Location: ./backend-smart-brain-api-prod/server.js`__
 
     ```js
-    const db = knex({
-      client: process.env.POSTGRES_CLIENT,
-      connection: {
+    require('dotenv').config();
+
+    const db = process.env.DATABASE_URL ?
+    knex({
+        client: 'pg',
+        connection: process.env.DATABASE_URL
+    })
+    :
+    knex({
+        client: process.env.POSTGRES_CLIENT,
+        connection: {
         host: process.env.POSTGRES_HOST,
         user: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
         database: process.env.POSTGRES_DB
-      }
+        }
     });
     ```
 
