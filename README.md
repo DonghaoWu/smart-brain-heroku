@@ -175,11 +175,13 @@ $ git push -u origin master
 1. Create heroku app and addon redis & postgreSQL.
 
     ```bash
-    $ heroku login 
+    $ heroku login
+
+    $ git remote rm heroku 
 
     $ heroku create <your-heroku-app-name>
 
-    heroku addons:create heroku-redis:hobby-dev 
+    $ heroku addons:create heroku-redis:hobby-dev --name=<your-heroku-addon-redis-name> 
 
     $ heroku addons:create heroku-postgresql:hobby-dev --name=<your-heroku-addon-db-name> 
 
@@ -270,16 +272,17 @@ $ git push -u origin master
     });
     ```
 
-5. Deploy.
+8. Deploy.
 
     ```bash
-    git remote -v
-    heroku git:remote -a <your-heroku-app-name>
-    git add .
-    git commit -m'ready for deploy'
-    git push heroku master
-    heroku ps:scale web=1
-    heroku open
+    $ git remote -v
+    $ git remote rm heroku 
+    $ heroku git:remote -a <your-heroku-app-name>
+    $ git add .
+    $ git commit -m'ready for deploy'
+    $ git push heroku master
+    $ heroku ps:scale web=1
+    $ heroku open
     ```
 
 #### For more detail, please [visit here.](https://github.com/DonghaoWu/smart-brain-doc/blob/master/README.md)
