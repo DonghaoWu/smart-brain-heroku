@@ -12,7 +12,7 @@ const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
     .then(data => {
       const isValid = bcrypt.compareSync(password, data[0].hash);
       if (isValid) {
-        return db.select('*').from('users')
+        return db.select('*').from('account')
           .where('email', '=', email)
           .then(user => {
             return Promise.resolve(user[0]);

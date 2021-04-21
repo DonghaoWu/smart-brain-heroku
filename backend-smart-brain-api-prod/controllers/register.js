@@ -16,7 +16,7 @@ const handleRegisterPromise = (req, res, db, bcrypt) => {
       .into('login')
       .returning('email')
       .then(loginEmail => {
-        return trx('users')
+        return trx('account')
           .returning('*')
           .insert({
             email: loginEmail[0],
@@ -63,7 +63,6 @@ const createSession = (user) => {
 const registerAuthentication = (req, res, db, bcrypt) => {
   return handleRegisterPromise(req, res, db, bcrypt)
     .then(data => {
-      console.log(data)
       return data.id && data.email ? createSession(data) : Promise.reject(data)
     })
     .then(session => {

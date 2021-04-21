@@ -23,7 +23,6 @@ $ git push -u origin master
 
 ### <span id="30.2">`Run the application locally.`</span>
 
-
 1. Install dependencies.
 
     ```bash
@@ -31,22 +30,23 @@ $ git push -u origin master
     $ npm run installAll
     ```
 
-2. [Download](https://redis.io/download) & Run redis server(6.2.2).
+2. [Download Redis](https://redis.io/download) & Run redis server(6.2.2).
 
     - Download
     ```bash
+    $ cd
     $ wget https://download.redis.io/releases/redis-6.2.2.tar.gz
     $ tar xzf redis-6.2.2.tar.gz
     $ cd redis-6.2.2
     $ make
     ```
 
-    - Run
+    - :gem: Run redis server locally.
     ```bash
     $ src/redis-server
     ```
 
-3. Local redis setup.
+3. Connect redis in backend code.
 
     __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
 
@@ -74,7 +74,7 @@ $ git push -u origin master
     JWT_SECRET=<--->
     ```
 
-5. Download, install [postgreSQL](https://www.postgresql.org/) & postgreSQL setup.
+5. Download, install [postgreSQL](https://www.postgresql.org/) and connect.
 
     __`Location: ./backend-smart-brain-api-prod/server.js`__
 
@@ -100,32 +100,73 @@ $ git push -u origin master
 
 6. Create local postgreSQL database and tables:
 
-    - Create database: postico [CHECK HERE](https://github.com/DonghaoWu/Weather-RNEP-heroku-new/blob/master/README.md)
+    1. Tables sql files:
 
-    - Create tables:
+        - ./sql/login.sql
+        ```sql
+        CREATE TABLE login (
+            id serial PRIMARY KEY,
+            hash VARCHAR(100) NOT NULL,
+            email text UNIQUE NOT NULL
+        );
+        ```
 
-    ```sql
-    CREATE TABLE login (
-        id serial PRIMARY KEY,
-        hash VARCHAR(100) NOT NULL,
-        email text UNIQUE NOT NULL
-    );
+        - ./sql/account.sql
 
-    CREATE TABLE users (
-        id serial PRIMARY KEY,
-        name VARCHAR(100),
-        email text UNIQUE NOT NULL,
-        entries BIGINT DEFAULT 0,
-        joined TIMESTAMP NOT NULL,
-        pet VARCHAR(100),
-        age BIGINT
-    );
+        ```sql
+        CREATE TABLE account (
+            id serial PRIMARY KEY,
+            name VARCHAR(100),
+            email text UNIQUE NOT NULL,
+            entries BIGINT DEFAULT 0,
+            joined TIMESTAMP NOT NULL,
+            pet VARCHAR(100),
+            age BIGINT
+        );
+        ```
+
+    2. ./configure_db_local.sh
+    ```bash
+    #!/bin/bash
+    echo "Configuring smart-brain-local db..."
+
+    dropdb smart-brain-local
+    createdb smart-brain-local
+
+    psql smart-brain-local < ./sql/login.sql
+    psql smart-brain-local < ./sql/account.sql
+
+    echo "smart-brain-local db configured!"
+    ```
+
+    3. Add a script in package.json
+
+    ```json
+    "configure-db-local": "sh ./configure_db_local.sh",
+    ```
+
+    4. Run the script.
+
+    ```bash
+    $ npm run configure-db-local
     ```
 
 7. Run the application locally.
 
     ```bash
     $ npm run dev
+    ```
+
+8. sql local commands:
+
+    ```bash
+    $ psql --username=postgres # run postgre server cli
+
+    postgres=# \l
+    postgres=# \c smart-brain-local
+
+    smart-brain-local=# \dt
+    smart-brain-local=# select * from account;
     ```
 
 ### <span id="30.3">`Heroku deploy the application.`</span>
@@ -154,7 +195,7 @@ $ git push -u origin master
         email text UNIQUE NOT NULL
     );
 
-    CREATE TABLE users (
+    CREATE TABLE user (
         id serial PRIMARY KEY,
         name VARCHAR(100),
         email text UNIQUE NOT NULL,
