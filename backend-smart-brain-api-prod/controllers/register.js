@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+// const redisClient = redis.createClient(process.env.REDIS_URL, { no_ready_check: true });
+const redisClient = redis.createClient(6379);
+const knex = require('knex');
 
 const handleRegisterPromise = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body;
@@ -60,17 +62,18 @@ const createSession = (user) => {
     })
 }
 
-const registerAuthentication =(req, res,db, bcrypt)=>{
-  return handleRegisterPromise(req, res,db, bcrypt)
-  .then(data =>{
-    return data.id && data.email ? createSession(data) : Promise.reject(data)
-  })
-  .then(session => {
-    return res.json(session);
-  })
-  .catch(err => {
-    return res.status(400).json(err);
-  });
+const registerAuthentication = (req, res, db, bcrypt) => {
+  return handleRegisterPromise(req, res, db, bcrypt)
+    .then(data => {
+      console.log(data)
+      return data.id && data.email ? createSession(data) : Promise.reject(data)
+    })
+    .then(session => {
+      return res.json(session);
+    })
+    .catch(err => {
+      return res.status(400).json(err);
+    });
 }
 
 module.exports = {

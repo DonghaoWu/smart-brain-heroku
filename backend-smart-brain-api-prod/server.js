@@ -15,12 +15,24 @@ const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 const auth = require('./middlewares/authorization');
 
-const db = require('knex')({
-  client: 'pg',
-  connection: process.env.DATABASE_URL
-});
+const db = process.env.DATABASE_URL ?
+  knex({
+    client: 'pg',
+    connection: process.env.DATABASE_URL
+  })
+  :
+  knex({
+    client: process.env.POSTGRES_CLIENT,
+    connection: {
+      host: process.env.POSTGRES_HOST,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB
+    }
+  });
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -40,5 +52,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-  console.log('app is running on port 4000');
+  console.log(`app is running on port ${PORT}`);
 })

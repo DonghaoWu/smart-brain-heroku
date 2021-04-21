@@ -33,6 +33,7 @@ class Signin extends React.Component {
     })
       .then(response => response.json())
       .then(session => {
+        console.log(session,'====>')
         if (session.userId && session.success === 'true') {
           this.saveAuthTokenInSession(session.token);
           fetch(`/profile/${session.userId}`, {
@@ -50,12 +51,12 @@ class Signin extends React.Component {
               }
             })
             .catch(err => {
-              console.log();
+              console.log(err);
             })
         }
       })
       .catch(err => {
-        console.log();
+        console.log(err);
       })
   }
 

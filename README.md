@@ -33,9 +33,16 @@ $ git push -u origin master
 
 2. [Download](https://redis.io/download) & Run redis server.
 
+    - Download
     ```bash
-    $ cd
-    $ cd redis-6.0.6
+    $ wget https://download.redis.io/releases/redis-6.2.2.tar.gz
+    $ tar xzf redis-6.2.2.tar.gz
+    $ cd redis-6.2.2
+    $ make
+    ```
+
+    - Run
+    ```bash
     $ src/redis-server
     ```
 
