@@ -41,7 +41,7 @@ $ git push -u origin master
     $ make
     ```
 
-    - :gem: Run redis server locally.
+    - :gem: Run redis server locally(in a seperate terminal).
     ```bash
     $ src/redis-server
     ```
@@ -185,52 +185,55 @@ $ git push -u origin master
 
     $ heroku addons:attach <your-heroku-addon-db-name> --app=<your-heroku-app-name>
 
-    $ heroku pg:psql --app <your-heroku-app-name>
+    $ heroku pg:psql --app <your-heroku-app-name> # Access heroku postgre cli
     ```
 
-    ```sql
-    CREATE TABLE login (
-        id serial PRIMARY KEY,
-        hash VARCHAR(100) NOT NULL,
-        email text UNIQUE NOT NULL
-    );
-
-    CREATE TABLE user (
-        id serial PRIMARY KEY,
-        name VARCHAR(100),
-        email text UNIQUE NOT NULL,
-        entries BIGINT DEFAULT 0,
-        joined TIMESTAMP NOT NULL,
-        pet VARCHAR(100),
-        age BIGINT
-    );
-    ```
-
-    - Quit sql command line.
+2. ./configure_db_heroku.sh
     ```bash
-    \q
+    #!/bin/bash
+
+    echo "Configuring heroku postgre database..."
+
+    heroku pg:reset DATABASE
+
+    heroku pg:psql < ./sql/login.sql
+    heroku pg:psql < ./sql/account.sql
+
+    echo "Heroku postgre database configured!"
     ```
 
-2. Heroku environment variables setup.
+3. Add a script in package.json
+
+    ```json
+    "configure-db-heroku": "sh ./configure_db_heroku.sh",
+    ```
+
+4. Run the script.
+
+    ```bash
+    $ npm run configure-db-heroku
+    ```
+
+5. Heroku environment variables setup.
 
     ```diff
     + API_KEY
     + JWT_SECRET
     ```
 
-  <p align="center">
-  <img src="./assets/p30-01.png" width=90%>
-  </p>
+    <p align="center">
+    <img src="./assets/p30-01.png" width=90%>
+    </p>
 
-------------------------------------------------------------
+    ------------------------------------------------------------
 
-<p align="center">
-<img src="./assets/p30-02.png" width=90%>
-</p>
+    <p align="center">
+    <img src="./assets/p30-02.png" width=90%>
+    </p>
 
-------------------------------------------------------------
+    ------------------------------------------------------------
 
-3. Heroku redis setup.
+6. Connect redis in backend code.
 
     __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
 
@@ -240,17 +243,30 @@ $ git push -u origin master
 
     ```js
     const redis = require('redis');
-    const redisClient = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
+    const redisClient = redis.createClient(process.env.REDIS_URL || 6379, { no_ready_check: true });
     ```
 
-4. PostgreSQL database setup.
+7. PostgreSQL database setup.
 
     __`Location: ./backend-smart-brain-api-prod/server.js`__
 
     ```js
-    const pg = require('knex')({
-      client: 'pg',
-      connection: process.env.DATABASE_URL
+    require('dotenv').config();
+
+    const db = process.env.DATABASE_URL ?
+    knex({
+        client: 'pg',
+        connection: process.env.DATABASE_URL
+    })
+    :
+    knex({
+        client: process.env.POSTGRES_CLIENT,
+        connection: {
+        host: process.env.POSTGRES_HOST,
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB
+        }
     });
     ```
 
