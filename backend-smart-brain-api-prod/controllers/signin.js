@@ -7,22 +7,22 @@ const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
   if (!email || !password) {
     return Promise.reject('incorrect form submission');
   }
-  return db.select('email', 'hash').from('login')
-    .where('email', '=', email)
-    .then(data => {
-      const isValid = bcrypt.compareSync(password, data[0].hash);
-      if (isValid) {
-        return db.select('*').from('account')
-          .where('email', '=', email)
-          .then(user => {
-            return Promise.resolve(user[0]);
-          })
-          .catch(err => Promise.reject('unable to get user'))
-      } else {
-        return Promise.reject('wrong credentials (wrong password)')
-      }
-    })
-    .catch(err => Promise.reject('wrong credentials (wrong email)'))
+  // return db.select('email', 'hash').from('login')
+  //   .where('email', '=', email)
+  //   .then(data => {
+  //     const isValid = bcrypt.compareSync(password, data[0].hash);
+  //     if (isValid) {
+  //       return db.select('*').from('account')
+  //         .where('email', '=', email)
+  //         .then(user => {
+  //           return Promise.resolve(user[0]);
+  //         })
+  //         .catch(err => Promise.reject('unable to get user'))
+  //     } else {
+  //       return Promise.reject('wrong credentials (wrong password)')
+  //     }
+  //   })
+  //   .catch(err => Promise.reject('wrong credentials (wrong email)'))
 }
 
 const hasTokenAndGetIdFromRedis = (req, res) => {

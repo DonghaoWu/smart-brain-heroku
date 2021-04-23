@@ -3,10 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
-const knex = require('knex');
 const morgan = require('morgan');
-
 const path = require('path');
+const db = require('./dbConnection');
 const PORT = process.env.PORT || 4000;
 
 const register = require('./controllers/register');
@@ -15,22 +14,6 @@ const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 const auth = require('./middlewares/authorization');
 
-const db = process.env.DATABASE_URL ?
-  knex({
-    client: 'pg',
-    connection: process.env.DATABASE_URL
-  })
-  :
-  knex({
-    client: process.env.POSTGRES_CLIENT,
-    connection: {
-      host: process.env.POSTGRES_HOST,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB
-    }
-  });
-
 const app = express();
 app.use(cors())
 app.use(express.json());
@@ -38,7 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, db, bcrypt) })
-app.post('/register', (req, res) => { register.registerAuthentication(req, res, db, bcrypt) })
+app.post('/register', (req, res) => { register.registerAuthentication(req, res, bcrypt) })
 app.get('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res, db) })
 app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db) });
 app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db) })

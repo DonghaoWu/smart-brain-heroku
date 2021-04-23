@@ -2,37 +2,22 @@ const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL || 6379, { no_ready_check: true });
 
-const handleRegisterPromise = (req, res, db, bcrypt) => {
-  const { email, name, password } = req.body;
-  if (!email || !name || !password) {
-    return Promise.reject('incorrect form submission');
+const AccountTable = require('../models/account/table');
+const AccountInfoTable = require('../models/accountInfo/table');
+
+const handleRegisterPromise = async (req, res, bcrypt) => {
+  try {
+    const { email, name, password } = req.body;
+    if (!email || !name || !password) {
+      throw new Error('incorrect form submission');
+    }
+    const hash = bcrypt.hashSync(password);
+    await AccountTable.storeAccount({ email, hash });
+    const { accountInfo } = await AccountInfoTable.storeAccountInfo({ email, name, joined: new Date() });
+    return accountInfo;
+  } catch (err) {
+    throw new Error(err.message);
   }
-  const hash = bcrypt.hashSync(password);
-  return db.transaction(trx => {
-    trx.insert({
-      hash: hash,
-      email: email
-    })
-      .into('login')
-      .returning('email')
-      .then(loginEmail => {
-        return trx('account')
-          .returning('*')
-          .insert({
-            email: loginEmail[0],
-            name: name,
-            joined: new Date()
-          })
-          .then(user => {
-            return Promise.resolve(user[0]);
-          })
-      })
-      .then(trx.commit)
-      .catch(trx.rollback)
-  })
-    .catch(err => {
-      return Promise.reject('unable to register')
-    })
 }
 
 const signToken = (email) => {
@@ -60,17 +45,17 @@ const createSession = (user) => {
     })
 }
 
-const registerAuthentication = (req, res, db, bcrypt) => {
-  return handleRegisterPromise(req, res, db, bcrypt)
-    .then(data => {
-      return data.id && data.email ? createSession(data) : Promise.reject(data)
-    })
-    .then(session => {
-      return res.json(session);
-    })
-    .catch(err => {
-      return res.status(400).json(err);
-    });
+const registerAuthentication = async (req, res, bcrypt) => {
+  try {
+    let session;
+    const data = await handleRegisterPromise(req, res, bcrypt);
+    if (data.id && data.email) session = await createSession(data);
+
+    return res.json(session);
+  } catch (err) {
+    console.log(err.message)
+    return res.status(400).json(err.message);
+  }
 }
 
 module.exports = {
