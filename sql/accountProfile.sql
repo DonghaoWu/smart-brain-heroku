@@ -1,4 +1,4 @@
-CREATE TABLE accountInfo (
+CREATE TABLE accountprofile (
     id serial PRIMARY KEY,
     name VARCHAR(100),
     email text UNIQUE NOT NULL,

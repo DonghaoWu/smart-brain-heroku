@@ -3,7 +3,7 @@ const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL || 6379, { no_ready_check: true });
 
 const AccountTable = require('../models/account/table');
-const AccountInfoTable = require('../models/accountInfo/table');
+const AccountProfileTable = require('../models/accountProfile/table');
 
 const handleRegisterPromise = async (req, res, bcrypt) => {
   try {
@@ -13,8 +13,8 @@ const handleRegisterPromise = async (req, res, bcrypt) => {
     }
     const hash = bcrypt.hashSync(password);
     await AccountTable.storeAccount({ email, hash });
-    const { accountInfo } = await AccountInfoTable.storeAccountInfo({ email, name, joined: new Date() });
-    return accountInfo;
+    const { accountProfile } = await AccountProfileTable.storeAccountProfile({ email, name, joined: new Date() });
+    return accountProfile;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -29,8 +29,8 @@ const setToken = (token, id) => {
   return Promise.resolve(redisClient.set(token, id))
 }
 
-const createSession = (user) => {
-  const { email, id } = user;
+const createSession = (accountProfile) => {
+  const { email, id } = accountProfile;
   const token = signToken(email);
   return setToken(token, id)
     .then(() => {
@@ -48,13 +48,13 @@ const createSession = (user) => {
 const registerAuthentication = async (req, res, bcrypt) => {
   try {
     let session;
-    const data = await handleRegisterPromise(req, res, bcrypt);
-    if (data.id && data.email) session = await createSession(data);
+    const accountProfile = await handleRegisterPromise(req, res, bcrypt);
+    if (accountProfile.id && accountProfile.email) session = await createSession({ email: accountProfile.email, id: accountProfile.id });
 
     return res.json(session);
   } catch (err) {
     console.log(err.message)
-    return res.status(400).json(err.message);
+    return res.status(400).json(`Unable to register: ${err.message}`);
   }
 }
 

@@ -20,12 +20,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, db, bcrypt) })
+app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, bcrypt) })
 app.post('/register', (req, res) => { register.registerAuthentication(req, res, bcrypt) })
-app.get('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res, db) })
+app.get('/profile', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res) })
 app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db) });
 app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db) })
-app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) })
+app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) });
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+
+  res.status(statusCode).json({
+      type: 'error',
+      message: err.message
+  })
+})
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend-smart-brain-prod/build')));

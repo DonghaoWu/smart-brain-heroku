@@ -8,23 +8,22 @@ class AccountTable {
                 [email, hash],
                 (error, response) => {
                     if (error) return reject(error);
-                    return resolve({ message:'create account success.' });
+                    return resolve({ message: 'create account success.' });
                 }
             )
         })
     };
 
-    static getAccount({ usernameHash }) {
+    static getAccount({ email }) {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT id, "passwordHash", "sessionId", balance FROM account
-            WHERE "usernameHash" = $1`,
-                [usernameHash],
+            db.query(`SELECT email, hash FROM account
+            WHERE email = $1`,
+                [email],
                 (error, response) => {
                     if (error) return reject(error);
 
-                    const account = response.rows[0];
-
-                    resolve({ account });
+                    const hash = response.rows[0].hash;
+                    return resolve({ hash });
                 }
             )
         })

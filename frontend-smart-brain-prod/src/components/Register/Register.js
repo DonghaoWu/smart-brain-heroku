@@ -40,7 +40,7 @@ class Register extends React.Component {
       .then(session => {
         if (session.userId && session.success === 'true') {
           this.saveAuthTokenInSession(session.token);
-          fetch(`/profile/${session.userId}`, {
+          fetch(`/profile`, {
             method: 'get',
             headers: {
               'Content-type': 'application/json',
@@ -48,9 +48,9 @@ class Register extends React.Component {
             }
           })
             .then(res => res.json())
-            .then(user => {
-              if (user && user.email) {
-                this.props.loadUser(user);
+            .then(accountProfile => {
+              if (accountProfile && accountProfile.email) {
+                this.props.loadUser(accountProfile);
                 this.props.onRouteChange('home');
               }
             })

@@ -2,42 +2,44 @@ const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL || 6379, { no_ready_check: true });
 
-const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return Promise.reject('incorrect form submission');
+const AccountTable = require('../models/account/table');
+const AccountProfileTable = require('../models/accountProfile/table');
+
+const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      throw new Error('incorrect form submission');
+    }
+
+    const { hash } = await AccountTable.getAccount({ email });
+    const isValid = bcrypt.compareSync(password, hash);
+
+    if (!isValid) {
+      throw new Error('wrong credentials!')
+    }
+    else {
+      const { accountProfile } = await AccountProfileTable.getAccountProfileByEmail({ email });
+      return accountProfile;
+    }
+  } catch (err) {
+    throw new Error(err.message);
   }
-  // return db.select('email', 'hash').from('login')
-  //   .where('email', '=', email)
-  //   .then(data => {
-  //     const isValid = bcrypt.compareSync(password, data[0].hash);
-  //     if (isValid) {
-  //       return db.select('*').from('account')
-  //         .where('email', '=', email)
-  //         .then(user => {
-  //           return Promise.resolve(user[0]);
-  //         })
-  //         .catch(err => Promise.reject('unable to get user'))
-  //     } else {
-  //       return Promise.reject('wrong credentials (wrong password)')
-  //     }
-  //   })
-  //   .catch(err => Promise.reject('wrong credentials (wrong email)'))
 }
 
 const hasTokenAndGetIdFromRedis = (req, res) => {
   const { authorization } = req.headers;
-  return redisClient.get(authorization, (err, reply) => {
-    if (err || !reply) {
+  return redisClient.get(authorization, (err, response) => {
+    if (err || !response) {
       return res.status(400).json('Unauthorized.');
     }
-    return res.json({ id: reply })
+    return res.json({ id: response })
   })
 }
 
 const signToken = (email) => {
   const jwtPayload = { email };
-  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '2 days' });
+  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '1 days' });
 }
 
 const setToken = (token, id) => {
@@ -60,19 +62,24 @@ const createSession = (user) => {
     })
 }
 
-const signinAuthentication = (req, res, db, bcrypt) => {
-  const { authorization } = req.headers;
-  return authorization ? hasTokenAndGetIdFromRedis(req, res)
-    : noTokenSigninAndGetUser(req, res, db, bcrypt)
-      .then(data => {
-        return data.id && data.email ? createSession(data) : Promise.reject(data)
-      })
-      .then(session => {
-        return res.json(session);
-      })
-      .catch(err => {
-        return res.status(400).json(err)
-      });
+const signinAuthentication = async (req, res, bcrypt) => {
+  try {
+    let session;
+    const { authorization } = req.headers;
+
+    if (authorization) {
+      await hasTokenAndGetIdFromRedis(req, res);
+    }
+    else {
+      const accountProfile = await noTokenSigninAndGetUser(req, res, bcrypt);
+      if (accountProfile.id && accountProfile.email) session = await createSession({ email: accountProfile.email, id: accountProfile.id });
+
+      return res.json(session);
+    }
+  } catch (err) {
+    console.log(err.message)
+    return res.status(400).json(`Unable to signin: ${err.message}`);
+  }
 }
 
 module.exports = {

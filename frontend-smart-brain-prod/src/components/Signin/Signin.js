@@ -35,7 +35,7 @@ class Signin extends React.Component {
       .then(session => {
         if (session.userId && session.success === 'true') {
           this.saveAuthTokenInSession(session.token);
-          fetch(`/profile/${session.userId}`, {
+          fetch(`/profile`, {
             method: 'get',
             headers: {
               'Content-type': 'application/json',

@@ -60,7 +60,7 @@ class App extends Component {
         .then(res => res.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`/profile/${data.id}`, {
+            fetch(`/profile`, {
               method: 'get',
               headers: {
                 'Content-type': 'application/json',
