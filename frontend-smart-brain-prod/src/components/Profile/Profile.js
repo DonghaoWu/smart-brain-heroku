@@ -20,7 +20,7 @@ class Profile extends Component {
             this.props.toggleModal();
             return;
         }
-        fetch(`/profile/${this.props.user.id}`, {
+        fetch(`/profile`, {
             method: 'post',
             headers: {
                 'Content-type': 'application/json',

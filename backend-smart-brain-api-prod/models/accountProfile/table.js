@@ -38,17 +38,13 @@ class AccountProfileTable {
         })
     };
 
-    static updateAccountProfile({ usernameHash }) {
+    static updateAccountProfile({ name, age, pet, id }) {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT id, "passwordHash", "sessionId", balance FROM account
-            WHERE "usernameHash" = $1`,
-                [usernameHash],
+            db.query(`UPDATE accountProfile SET name=$1, age=$2, pet=$3 WHERE id = $4`,
+                [name, age, pet, id],
                 (error, response) => {
                     if (error) return reject(error);
-
-                    const account = response.rows[0];
-
-                    resolve({ account });
+                    return resolve();
                 }
             )
         })

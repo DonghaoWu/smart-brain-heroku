@@ -2,7 +2,6 @@ const AccountProfileTable = require('../models/accountProfile/table');
 
 const handleProfileGet = async (req, res) => {
   try {
-    console.log(req.body);
     const { userId } = req.body;
     const { accountProfile } = await AccountProfileTable.getAccountProfileById({ id: userId });
     return res.json(accountProfile);
@@ -11,20 +10,19 @@ const handleProfileGet = async (req, res) => {
   }
 }
 
-const handleProfileUpdate = (req, res, db) => {
-  const { id } = req.params;
-  const { name, age, pet } = req.body.formInput
-  // db('account')
-  //   .where({ id })
-  //   .update({ name: name, age: age, pet: pet })
-  //   .then(resp => {
-  //     if (resp) {
-  //       res.json("success")
-  //     } else {
-  //       res.status(400).json('Not found')
-  //     }
-  //   })
-  //   .catch(err => res.status(400).json('error updating user'))
+const handleProfileUpdate = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const { name, age, pet } = req.body.formInput;
+    await AccountProfileTable.updateAccountProfile({ name, age, pet, id: userId });
+    return res.status(200).json(`Updated profile success.`);
+  } catch (err) {
+    const error = new Error(`Update profile failed:${err.message}`);
+    error.statusCode = 400;
+    
+    console.log(error);
+    next(error);
+  }
 }
 
 module.exports = {

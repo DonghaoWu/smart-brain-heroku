@@ -50,7 +50,7 @@ class App extends Component {
   componentDidMount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      fetch('/signin', {
+      fetch('/auth', {
         method: 'post',
         headers: {
           'Content-type': 'application/json',
@@ -59,7 +59,7 @@ class App extends Component {
       })
         .then(res => res.json())
         .then(data => {
-          if (data && data.id) {
+          if (data && !data.type) {
             fetch(`/profile`, {
               method: 'get',
               headers: {

@@ -20,19 +20,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, bcrypt) })
-app.post('/register', (req, res) => { register.registerAuthentication(req, res, bcrypt) })
-app.get('/profile', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res) })
-app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db) });
+
+app.post('/auth', auth.requireAuth, (req, res, next) => { return res.status(200).json('success') })
+app.post('/signin', (req, res, next) => { signin.signinAuthentication(req, res, bcrypt, next) })
+app.post('/register', (req, res, next) => { register.registerAuthentication(req, res, bcrypt, next) })
+app.get('/profile', auth.requireAuth, (req, res, next) => { profile.handleProfileGet(req, res, next) })
+app.post('/profile', auth.requireAuth, (req, res, next) => { profile.handleProfileUpdate(req, res, next) });
 app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db) })
 app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) });
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
 
-  res.status(statusCode).json({
-      type: 'error',
-      message: err.message
+  return res.status(statusCode).json({
+    type: 'error',
+    message: err.message
   })
 })
 
