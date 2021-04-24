@@ -34,7 +34,7 @@ const initialState = {
     id: '',
     name: '',
     email: '',
-    entries: 0,
+    imageNum: 0,
     joined: '',
     age: 0,
     pet: ''
@@ -45,6 +45,20 @@ class App extends Component {
   constructor() {
     super();
     this.state = initialState;
+  }
+
+  loadUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        imageNum: data.imageNum,
+        joined: data.joined,
+        pet: data.pet,
+        age: data.age
+      }
+    })
   }
 
   componentDidMount() {
@@ -81,20 +95,6 @@ class App extends Component {
     }
   }
 
-  loadUser = (data) => {
-    this.setState({
-      user: {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        entries: data.entries,
-        joined: data.joined,
-        pet: data.pet,
-        age: data.age
-      }
-    })
-  }
-
   calculateFaceLocations = (data) => {
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
@@ -127,6 +127,7 @@ class App extends Component {
       return;
     }
     this.setState({ imageUrl: this.state.input });
+
     fetch('/imageurl', {
       method: 'post',
       headers: {
@@ -136,26 +137,23 @@ class App extends Component {
       body: JSON.stringify({
         input: this.state.input
       })
-    }).then(response => response.json())
-      .then(response => {
-        if (response) {
+    }).then(apiData => apiData.json())
+      .then(apiData => {
+        if (apiData) {
           fetch('/image', {
             method: 'put',
             headers: {
               'Content-type': 'application/json',
-              'Authorization': token,
-            },
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
+              'Authorization': token
+            }
           })
             .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count }))
+            .then(data => {
+              this.setState({ user: { ...this.state.user, imageNum: data } })
             })
             .catch()
         }
-        this.displayFaceBox(this.calculateFaceLocations(response))
+        this.displayFaceBox(this.calculateFaceLocations(apiData))
       })
       .catch(err => console.log);
   }
@@ -196,7 +194,7 @@ class App extends Component {
             <Logo />
             <Rank
               name={this.state.user.name}
-              entries={this.state.user.entries}
+              imageNum={this.state.user.imageNum}
             />
             <ImageLinkForm
               onInputChange={this.onInputChange}

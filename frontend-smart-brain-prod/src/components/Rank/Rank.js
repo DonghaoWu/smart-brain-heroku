@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css';
 
 class Rank extends React.Component {
   constructor() {
@@ -9,18 +10,18 @@ class Rank extends React.Component {
   }
 
   componentDidMount() {
-    this.generateEmoji(this.props.entries);
+    this.generateEmoji(this.props.imageNum);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.entries === this.props.entries && prevProps.name === this.props.name) {
+    if (prevProps.imageNum === this.props.imageNum && prevProps.name === this.props.name) {
       return null;
     }
-    this.generateEmoji(this.props.entries)
+    this.generateEmoji(this.props.imageNum)
   }
 
-  generateEmoji = (entries) => {
-    fetch(`https://6ilr84f27c.execute-api.us-east-1.amazonaws.com/prod/rank?rank=${entries}`)
+  generateEmoji = (imageNum) => {
+    fetch(`https://6ilr84f27c.execute-api.us-east-1.amazonaws.com/prod/rank?rank=${imageNum}`)
       .then(res => res.json())
       .then(data => {
         return this.setState({ emoji: data.input })
@@ -29,12 +30,13 @@ class Rank extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='user-data-container'>
         <div className='white f3'>
           {`${this.props.name}, your current entry count is...`}
         </div>
+
         <div className='white f1'>
-          {this.props.entries}
+          {this.props.imageNum}
         </div>
         <div className='white f1'>
           {this.state.emoji}

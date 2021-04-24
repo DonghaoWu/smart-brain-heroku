@@ -15,26 +15,29 @@ const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
     if (!isValid) {
       throw new Error('wrong credentials!')
     }
-    else {
+    else if (isValid) {
       const { accountProfile } = await AccountProfileTable.getAccountProfileByEmail({ email });
       return accountProfile;
     }
   } catch (err) {
-    throw new Error(err.message);
+    throw err;
   }
 }
 
-const signinAuthentication = async (req, res, bcrypt) => {
+const signinAuthentication = async (req, res, bcrypt, next) => {
   try {
     let session;
     const accountProfile = await noTokenSigninAndGetUser(req, res, bcrypt);
-    if (accountProfile.id && accountProfile.email) session = await createSession({ email: accountProfile.email, id: accountProfile.id });
-
-    return res.json(session);
-
+    if (accountProfile.id && accountProfile.email) {
+      session = await createSession({ email: accountProfile.email, id: accountProfile.id });
+    }
+    return res.status(200).json(session);
   } catch (err) {
-    console.log(err.message)
-    return res.status(400).json(`Unable to signin: ${err.message}`);
+    const error = new Error(`Unable to signin: ${err.message}`);
+    error.statusCode = 400;
+
+    console.log(error);
+    next(error);
   }
 }
 

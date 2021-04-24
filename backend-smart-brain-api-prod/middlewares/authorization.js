@@ -5,7 +5,7 @@ const checkAuthInRedis = (authorization) => {
     return new Promise((resolve, reject) => {
         redisClient.get(authorization, (err, reply) => {
             if (err || !reply) {
-                const error = new Error('Unauthorized.');
+                const error = new Error('Unauthorized: unvalid token.');
                 error.statusCode = 401;
                 return reject(error);
             }
@@ -18,15 +18,14 @@ const requireAuth = async (req, res, next) => {
     try {
         const { authorization } = req.headers;
         if (!authorization) {
-            const error = new Error('Unauthorized.');
+            const error = new Error('Unauthorized: no token.');
             error.statusCode = 401;
-            return next(error);
+            throw error;
         }
         const id = await checkAuthInRedis(authorization);
         req.body.userId = id;
         next();
     } catch (err) {
-        console.log(err.message)
         next(err);
     }
 }

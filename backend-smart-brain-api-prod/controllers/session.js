@@ -16,11 +16,11 @@ const createSession = (accountProfile) => {
     const token = signToken(email);
     return setToken(token, id)
         .then(() => {
-            return {
+            return Promise.resolve({
                 success: 'true',
                 userId: id,
                 token: token
-            }
+            })
         })
         .catch(err => {
             return Promise.reject(`creact session failed.`)

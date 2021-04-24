@@ -67,7 +67,7 @@ class Profile extends Component {
                             className='h3 w3 dib' alt='avatar'
                         />
                         <h1>{name}</h1>
-                        <h4>{`Images submitted: ${user.entries}`}</h4>
+                        <h4>{`Images submitted: ${user.imageNum}`}</h4>
                         <p>{`Member since: ${new Date(user.joined).toLocaleDateString()}`}</p>
                         <hr />
                         <label className='mt2 fw6' htmlFor='user-name'>Name:</label>

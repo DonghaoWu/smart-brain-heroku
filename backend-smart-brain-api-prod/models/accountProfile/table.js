@@ -49,6 +49,18 @@ class AccountProfileTable {
             )
         })
     }
+
+    static addImageNumAccountProfile({ id }) {
+        return new Promise((resolve, reject) => {
+            db.query(`UPDATE accountProfile SET "imageNum"="imageNum" + 1 WHERE id = $1 RETURNING "imageNum"`,
+                [id],
+                (error, response) => {
+                    if (error) return reject(error);
+                    return resolve({ imageNum: response.rows[0].imageNum });
+                }
+            )
+        })
+    }
 }
 
 module.exports = AccountProfileTable;

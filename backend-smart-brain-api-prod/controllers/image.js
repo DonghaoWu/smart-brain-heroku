@@ -1,28 +1,37 @@
 const Clarifai = require('clarifai');
+const AccountProfileTable = require('../models/accountProfile/table');
 
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
   apiKey: process.env.API_KEY
 });
 
-const handleApiCall = (req, res) => {
-  app.models
-    .predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
-    .then(data => {
-      res.json(data);
-    })
-    .catch(err => res.status(400).json('unable to work with API'))
+const handleApiCall = async (req, res, next) => {
+  try {
+    const apiData = await app.models.predict(Clarifai.FACE_DETECT_MODEL, req.body.input);
+    return res.json(apiData);
+  } catch (err) {
+    const error = new Error(`Unable to call the external API: ${err.message}`);
+    error.statusCode = 400;
+
+    console.log(error);
+    next(error);
+  }
 }
 
-const handleImage = (req, res, db) => {
-  const { id } = req.body;
-  // db('account').where('id', '=', id)
-  //   .increment('entries', 1)
-  //   .returning('entries')
-  //   .then(entries => {
-  //     res.json(entries[0]);
-  //   })
-  //   .catch(err => res.status(400).json('unable to get entries'))
+const handleImage = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const data = await AccountProfileTable.addImageNumAccountProfile({ id: userId });
+    
+    return res.status(200).json(data.imageNum);
+  } catch (err) {
+    const error = new Error(`Unable to get imageNum:${err.message}`);
+    error.statusCode = 400;
+
+    console.log(error);
+    next(error);
+  }
 }
 
 module.exports = {
