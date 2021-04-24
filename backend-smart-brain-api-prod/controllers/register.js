@@ -18,6 +18,7 @@ const handleRegisterPromise = async (req, res, bcrypt) => {
 }
 
 const registerAuthentication = async (req, res, bcrypt, next) => {
+  console.log('Hitting register route');
   try {
     let session;
     const accountProfile = await handleRegisterPromise(req, res, bcrypt);
