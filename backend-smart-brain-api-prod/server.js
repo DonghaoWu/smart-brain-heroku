@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const path = require('path');
 const db = require('./dbConnection');
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');

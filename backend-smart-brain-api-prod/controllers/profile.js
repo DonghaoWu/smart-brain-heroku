@@ -1,6 +1,7 @@
 const AccountProfileTable = require('../models/accountProfile/table');
 
 const handleProfileGet = async (req, res, next) => {
+  console.log('hitting get profile route', req.body)
   try {
     const { userId } = req.body;
     const { accountProfile } = await AccountProfileTable.getAccountProfileById({ id: userId });
