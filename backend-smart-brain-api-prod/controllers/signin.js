@@ -25,7 +25,6 @@ const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
 }
 
 const signinAuthentication = async (req, res, bcrypt, next) => {
-  console.log('Hitting signin route.');
   try {
     let session;
     const accountProfile = await noTokenSigninAndGetUser(req, res, bcrypt);
