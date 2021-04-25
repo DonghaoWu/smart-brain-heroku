@@ -2,13 +2,13 @@
 
 ## :gem::gem::gem:  This documentation is about how to download this repo and deploy it on Heroku.
 
-### Application link: [https://smart-brain-prod-2020.herokuapp.com/](https://smart-brain-prod-2020.herokuapp.com/)
+### Application link: [https://smart-brains-2021.herokuapp.com/](https://smart-brains-2021.herokuapp.com/)
 
 ### <span id="30.1">`Download & connect to your gitHub.`</span>
 
 ```bash
-$ git clone https://github.com/DonghaoWu/smart-brain-prod.git
-$ cd smart-brain-prod
+$ git clone https://github.com/DonghaoWu/smart-brain-heroku.git
+$ cd smart-brain-heroku
 $ rm -fr .git
 $ git init
 $ git add .
@@ -41,18 +41,16 @@ $ git push -u origin master
     $ make
     ```
 
-    - :gem: Run redis server locally(in a seperate terminal).
+    - :gem: Run redis server locally (in a seperate terminal).
     ```bash
+    $ cd
+    $ cd redis-6.2.2
     $ src/redis-server
     ```
 
 3. Connect redis in backend code.
 
-    __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
-
-    __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
-
-    __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
+    __`Location: ./backend/middlewares/authorization.js`__
 
     ```js
     const redis = require('redis');
@@ -61,7 +59,7 @@ $ git push -u origin master
 
 4. Add Local .env file.
 
-    __`Location: ./backend-smart-brain-api-prod/.env`__
+    __`Location: ./backend/.env`__
 
     ```env
     POSTGRES_CLIENT=<--->
@@ -76,49 +74,54 @@ $ git push -u origin master
 
 5. Download, install [postgreSQL](https://www.postgresql.org/) and connect.
 
-    __`Location: ./backend-smart-brain-api-prod/server.js`__
+    __`Location: ./backend/dbConnection.js`__
 
     ```js
-    require('dotenv').config();
-
-    const db = process.env.DATABASE_URL ?
-    knex({
-        client: 'pg',
-        connection: process.env.DATABASE_URL
-    })
-    :
-    knex({
-        client: process.env.POSTGRES_CLIENT,
-        connection: {
-        host: process.env.POSTGRES_HOST,
-        user: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
-        database: process.env.POSTGRES_DB
+    const { Client } = require('pg');
+    const dbSetting = process.env.DATABASE_URL ?
+        {
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
         }
-    });
+        :
+        {
+            user: process.env.POSTGRES_USER,
+            host: process.env.POSTGRES_HOST,
+            database: process.env.POSTGRES_LOCAL_DB,
+            password: process.env.POSTGRES_PASSWORD,
+            port: process.env.POSTGRES_PORT
+        }
+
+    const db = new Client(dbSetting);
+
+    db.connect();
+
+    module.exports = db;
     ```
 
 6. Create local postgreSQL database and tables:
 
     1. Tables sql files:
 
-        - ./sql/login.sql
+        - ./sql/account.sql
         ```sql
-        CREATE TABLE login (
+        CREATE TABLE account (
             id serial PRIMARY KEY,
             hash VARCHAR(100) NOT NULL,
             email text UNIQUE NOT NULL
         );
         ```
 
-        - ./sql/account.sql
+        - ./sql/accountProfile.sql
 
         ```sql
-        CREATE TABLE account (
+        CREATE TABLE accountprofile (
             id serial PRIMARY KEY,
             name VARCHAR(100),
             email text UNIQUE NOT NULL,
-            entries BIGINT DEFAULT 0,
+            "imageNum" BIGINT DEFAULT 0,
             joined TIMESTAMP NOT NULL,
             pet VARCHAR(100),
             age BIGINT
@@ -126,6 +129,7 @@ $ git push -u origin master
         ```
 
     2. ./configure_db_local.sh
+
     ```bash
     #!/bin/bash
     echo "Configuring smart-brain-local db..."
@@ -133,8 +137,8 @@ $ git push -u origin master
     dropdb smart-brain-local
     createdb smart-brain-local
 
-    psql smart-brain-local < ./sql/login.sql
     psql smart-brain-local < ./sql/account.sql
+    psql smart-brain-local < ./sql/accountProfile.sql
 
     echo "smart-brain-local db configured!"
     ```
@@ -198,8 +202,8 @@ $ git push -u origin master
 
     heroku pg:reset DATABASE
 
-    heroku pg:psql < ./sql/login.sql
     heroku pg:psql < ./sql/account.sql
+    heroku pg:psql < ./sql/accountProfile.sql
 
     echo "Heroku postgre database configured!"
     ```
@@ -237,11 +241,7 @@ $ git push -u origin master
 
 6. Connect redis in backend code.
 
-    __`Location: ./backend-smart-brain-api-prod/controllers/register.js`__
-
-    __`Location: ./backend-smart-brain-api-prod/controllers/signin.js`__
-
-    __`Location: ./backend-smart-brain-api-prod/middlewares/authorization.js`__
+    __`Location: ./backend/middlewares/authorization.js`__
 
     ```js
     const redis = require('redis');
@@ -250,26 +250,31 @@ $ git push -u origin master
 
 7. PostgreSQL database setup.
 
-    __`Location: ./backend-smart-brain-api-prod/server.js`__
+    __`Location: ./backend/dbConnection.js`__
 
     ```js
-    require('dotenv').config();
-
-    const db = process.env.DATABASE_URL ?
-    knex({
-        client: 'pg',
-        connection: process.env.DATABASE_URL
-    })
-    :
-    knex({
-        client: process.env.POSTGRES_CLIENT,
-        connection: {
-        host: process.env.POSTGRES_HOST,
-        user: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
-        database: process.env.POSTGRES_DB
+    const { Client } = require('pg');
+    const dbSetting = process.env.DATABASE_URL ?
+        {
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
         }
-    });
+        :
+        {
+            user: process.env.POSTGRES_USER,
+            host: process.env.POSTGRES_HOST,
+            database: process.env.POSTGRES_LOCAL_DB,
+            password: process.env.POSTGRES_PASSWORD,
+            port: process.env.POSTGRES_PORT
+        }
+
+    const db = new Client(dbSetting);
+
+    db.connect();
+
+    module.exports = db;
     ```
 
 8. Deploy.
