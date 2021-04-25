@@ -12,6 +12,15 @@ const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
       throw new Error('Please input your password.');
     }
 
+    function validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+
+    if (!validateEmail(email)) {
+      throw new Error('Email is not valid.');
+    }
+
     const { hash } = await AccountTable.getAccount({ email });
     const isValid = bcrypt.compareSync(password, hash);
 
