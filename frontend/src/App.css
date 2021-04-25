@@ -15,3 +15,9 @@
   left: 0;
   z-index: -1;
 }
+
+.error-message{
+  margin:1rem;
+  font:1.8rem bold;
+  color:rgb(189, 18, 18);
+}

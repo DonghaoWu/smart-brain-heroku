@@ -104,7 +104,7 @@ class Register extends React.Component {
                 />
               </div>
             </fieldset>
-            <div className='main-error'>{this.state.errorMessage}</div>
+            <p className='main-error'>{this.state.errorMessage}</p>
             <div className="">
               <input
                 onClick={this.onSubmitRegisterAsync}

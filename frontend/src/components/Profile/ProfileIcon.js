@@ -10,14 +10,12 @@ class ProfileIcon extends React.Component {
   }
 
   toggle = () => {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    });
+    this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
   render() {
     return (
-      <div className="pa4 tc">
+      <div className="pa3 tc">
         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
           <DropdownToggle
             tag="span"

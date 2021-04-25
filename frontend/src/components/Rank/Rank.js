@@ -31,12 +31,13 @@ class Rank extends React.Component {
   render() {
     return (
       <div className='user-data-container'>
-        <div className='white f3'>
-          {`${this.props.name}, your current entry count is...`}
-        </div>
-
-        <div className='white f1'>
-          {this.props.imageNum}
+        <div>
+          <div className='white f3'>
+            {`${this.props.name}, your current entry count is...`}
+          </div>
+          <div className='white f1'>
+            {this.props.imageNum}
+          </div>
         </div>
         <div className='white f1'>
           {this.state.emoji}
