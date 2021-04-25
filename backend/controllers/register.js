@@ -5,9 +5,16 @@ const AccountProfileTable = require('../models/accountProfile/table');
 const handleRegisterPromise = async (req, res, bcrypt) => {
   try {
     const { email, name, password } = req.body;
-    if (!email || !name || !password) {
-      throw new Error('incorrect form submission');
+    if (!name) {
+      throw new Error('Please input your name.');
     }
+    if (!email) {
+      throw new Error('Please input your email.');
+    }
+    if (!password) {
+      throw new Error('Please input your password.');
+    }
+    
     const hash = bcrypt.hashSync(password);
     await AccountTable.storeAccount({ email, hash });
     const { accountProfile } = await AccountProfileTable.storeAccountProfile({ email, name, joined: new Date() });

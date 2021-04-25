@@ -21,7 +21,7 @@ class AccountTable {
                 [email],
                 (error, response) => {
                     if (error) return reject(error);
-
+                    if (response.rows.length === 0) return reject(new Error('Invalid email.'))
                     const hash = response.rows[0].hash;
                     return resolve({ hash });
                 }

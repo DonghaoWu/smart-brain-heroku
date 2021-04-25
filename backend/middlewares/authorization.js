@@ -5,7 +5,7 @@ const checkAuthInRedis = (authorization) => {
     return new Promise((resolve, reject) => {
         redisClient.get(authorization, (err, reply) => {
             if (err || !reply) {
-                const error = new Error('Unauthorized: unvalid token.');
+                const error = new Error('Unauthorized: Invalid token.');
                 error.statusCode = 401;
                 return reject(error);
             }

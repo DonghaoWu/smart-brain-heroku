@@ -5,15 +5,18 @@ const AccountProfileTable = require('../models/accountProfile/table');
 const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      throw new Error('incorrect form submission');
+    if (!email) {
+      throw new Error('Please input your email.');
+    }
+    if (!password) {
+      throw new Error('Please input your password.');
     }
 
     const { hash } = await AccountTable.getAccount({ email });
     const isValid = bcrypt.compareSync(password, hash);
 
     if (!isValid) {
-      throw new Error('wrong credentials!')
+      throw new Error('Invalid password.')
     }
     else if (isValid) {
       const { accountProfile } = await AccountProfileTable.getAccountProfileByEmail({ email });
