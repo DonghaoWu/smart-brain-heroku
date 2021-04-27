@@ -5,12 +5,8 @@ const AccountProfileTable = require('../models/accountProfile/table');
 const noTokenSigninAndGetUser = async (req, res, bcrypt) => {
   try {
     const { email, password } = req.body;
-    if (!email) {
-      throw new Error('Please input your email.');
-    }
-    if (!password) {
-      throw new Error('Please input your password.');
-    }
+    if (!email) throw new Error('Please input your email.');
+    if (!password) throw new Error('Please input your password.');
 
     function validateEmail(email) {
       const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
